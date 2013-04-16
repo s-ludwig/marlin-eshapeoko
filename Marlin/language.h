@@ -33,12 +33,7 @@
 	#define MACHINE_NAME "3Drag"
 	#define FIRMWARE_URL "http://3dprint.elettronicain.it/"
 #else
-	#ifdef CUSTOM_MENDEL_NAME
-		#define MACHINE_NAME CUSTOM_MENDEL_NAME
-	#else
-		#define MACHINE_NAME "Mendel"
-	#endif
-
+	#define MACHINE_NAME "eShapeOko"
 	#define FIRMWARE_URL "http://www.mendel-parts.com"
 #endif
 

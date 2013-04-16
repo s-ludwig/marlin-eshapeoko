@@ -1183,6 +1183,10 @@
 #define KILL_PIN           -1
 #define SUICIDE_PIN        54  //PIN that has to be turned on right after start, to keep power flowing.
 
+#ifndef ULTRA_LCD
+#error Oops, no LCD!
+#endif
+
 #ifdef ULTRA_LCD
 
   #ifdef NEWPANEL
