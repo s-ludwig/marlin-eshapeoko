@@ -85,6 +85,8 @@
 // M Codes
 // M0   - Unconditional stop - Wait for user to press a button on the LCD (Only if ULTRA_LCD is enabled)
 // M1   - Same as M0
+// M3   - Start spindle (clockwise), optional S[rpm] parameter
+// M5   - Stop spindle
 // M17  - Enable/Power all stepper motors
 // M18  - Disable all stepper motors; same as M84
 // M20  - List SD card
@@ -278,6 +280,10 @@ unsigned long stoptime=0;
 
 static uint8_t tmp_extruder;
 
+#if SERVO_0_SPINDLE
+static int servo_0_throttle = 2000;
+#endif
+
 
 bool Stopped=false;
 
@@ -396,6 +402,7 @@ void servo_init()
 {
   #if (NUM_SERVOS >= 1) && defined(SERVO0_PIN) && (SERVO0_PIN > -1)
     servos[0].attach(SERVO0_PIN);
+    servos[0].write(90);
   #endif
   #if (NUM_SERVOS >= 2) && defined(SERVO1_PIN) && (SERVO1_PIN > -1)
     servos[1].attach(SERVO1_PIN);
@@ -1602,6 +1609,19 @@ void process_commands()
       LCD_MESSAGEPGM(MSG_RESUMING);
     }
     break;
+#endif
+#if SERVO_0_SPINDLE
+    case 3: // start spindle clockwise
+      if (code_seen('S')) {
+        long rpm = code_value_long();
+        rpm /= 48;
+        servo_0_throttle = rpm < 1000 ? rpm + 1000 : 2000;
+      }
+      servos[0].writeMicroseconds(servo_0_throttle);
+      break;
+    case 5: // stop spindle
+      servos[0].writeMicroseconds(1000);
+      break;
 #endif
     case 17:
         LCD_MESSAGEPGM(MSG_NO_MOVE);
