@@ -5,6 +5,7 @@ This is a personal fork of the original [Marlin](https://github.com/MarlinFirmwa
 
 - Usable work space: 32 cm x 80 cm
 - Second Y axis motor is driven by the E2 stepper driver (reverse direction)
+- The two Y axis motors are homed individually to enforce parallel positions
 - 20x2 LCD display enabled
 - RAMPS stepper shield
 - SD card reader enabled

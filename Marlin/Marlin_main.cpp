@@ -1015,6 +1015,40 @@ static void homeaxis(int axis) {
     plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate/60, active_extruder);
     st_synchronize();
 
+    // Dual Y motor setup individual endstop homing
+    #if DUAL_Y_INDIVIDUAL_HOMING
+      if (axis == Y_AXIS) {
+        // 1. Calibrate Y 
+        // 1. a) drive forward 3*home_retract_mm
+        destination[axis] = 3*home_retract_mm(axis) * axis_home_dir;
+        plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate/60, active_extruder);
+        WRITE(Y2_ENABLE_PIN, !Y_ENABLE_ON);
+        st_synchronize();
+        current_position[axis] = 0;
+        plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
+        // 1. b) drive backward home_rectract_mm and re-enable Y2
+        destination[axis] = -home_retract_mm(axis) * axis_home_dir;
+        plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate/60, active_extruder);
+        WRITE(Y2_ENABLE_PIN, !Y_ENABLE_ON);
+        st_synchronize();
+
+        // 2. Calibrate Y2
+        // 2. a) drive forward 3*home_rectract_mm
+        destination[axis] = 3*home_retract_mm(axis) * axis_home_dir;
+        plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate/60, active_extruder);
+        WRITE(Y_ENABLE_PIN, !Y_ENABLE_ON);
+        st_synchronize();
+        current_position[axis] = 0;
+        plan_set_position(current_position[X_AXIS], current_position[Y_AXIS], current_position[Z_AXIS], current_position[E_AXIS]);
+        // 2. b) drive backward home_rectract_mm and re-enable Y
+        destination[axis] = -home_retract_mm(axis) * axis_home_dir;
+        plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate/60, active_extruder);
+        WRITE(Y_ENABLE_PIN, !Y_ENABLE_ON);
+        st_synchronize();
+      }
+    #endif
+
+
     destination[axis] = 2*home_retract_mm(axis) * axis_home_dir;
 #ifdef DELTA
     feedrate = homing_feedrate[axis]/10;

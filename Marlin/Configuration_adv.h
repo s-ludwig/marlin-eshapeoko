@@ -165,6 +165,16 @@
   #error "You cannot have dual drivers for both Y and Z"
 #endif
 
+// Assume one endstop per motor ORed together in dual Y mode
+// This enables individual homing for enforced parallel positions
+// Note that the retraction amount for the Y axis must be small enough
+// to not cause significant flex of the X axis durign this process
+#define DUAL_Y_INDIVIDUAL_HOMING 1
+
+#if DUAL_Y_INDIVIDUAL_HOMING && !defined(Y_DUAL_STEPPER_DRIVERS)
+  #error Cannot use dual-Y homing without dual-Y setup
+#endif
+
 // Enable this for dual x-carriage printers. 
 // A dual x-carriage design has the advantage that the inactive extruder can be parked which
 // prevents hot-end ooze contaminating the print. It also reduces the weight of each x-carriage
@@ -213,9 +223,9 @@
 #endif //DUAL_X_CARRIAGE
     
 //homing hits the endstop, then retracts by this distance, before it tries to slowly bump again:
-#define X_HOME_RETRACT_MM 2 
-#define Y_HOME_RETRACT_MM 2 
-#define Z_HOME_RETRACT_MM 1 
+#define X_HOME_RETRACT_MM 2
+#define Y_HOME_RETRACT_MM 1.5
+#define Z_HOME_RETRACT_MM 1
 //#define QUICK_HOME  //if this is defined, if both x and y are to be homed, a diagonal move will be performed initially.
 
 #define AXIS_RELATIVE_MODES {false, false, false, false}
