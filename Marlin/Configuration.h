@@ -631,6 +631,7 @@ const bool Z_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic o
 
 // servo based spindle controller
 #define SERVO_0_SPINDLE 1
+#define MAX_SPINDLE_RPM 15000
 
 // Servo Endstops
 //

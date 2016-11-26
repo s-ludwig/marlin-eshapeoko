@@ -281,7 +281,7 @@ unsigned long stoptime=0;
 static uint8_t tmp_extruder;
 
 #if SERVO_0_SPINDLE
-static int servo_0_throttle = 2000;
+static int servo_0_throttle = 1000;
 #endif
 
 
@@ -400,7 +400,7 @@ void suicide()
 
 void servo_init()
 {
-  #if (NUM_SERVOS >= 1) && defined(SERVO0_PIN) && (SERVO0_PIN > -1)
+  #if (NUM_SERVOS >= 1) && defined(SERVO0_PIN) && (SERVO0_PIN > -1) && !SERVO_0_SPINDLE
     servos[0].attach(SERVO0_PIN);
     servos[0].write(90);
   #endif
@@ -1648,13 +1648,13 @@ void process_commands()
     case 3: // start spindle clockwise
       if (code_seen('S')) {
         long rpm = code_value_long();
-        rpm /= 48;
-        servo_0_throttle = rpm < 1000 ? rpm + 1000 : 2000;
+        servo_0_throttle = (rpm * 1000) / MAX_SPINDLE_RPM;
       }
+      if (!servos[0].attached()) servos[0].attach(SERVO0_PIN);
       servos[0].writeMicroseconds(servo_0_throttle);
       break;
     case 5: // stop spindle
-      servos[0].writeMicroseconds(1000);
+      servos[0].detach();
       break;
 #endif
     case 17:

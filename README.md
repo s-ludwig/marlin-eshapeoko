@@ -10,4 +10,4 @@ This is a personal fork of the original [Marlin](https://github.com/MarlinFirmwa
 - RAMPS stepper shield
 - SD card reader enabled
 - min+max endstops, always enabled, Y endstops with special logic circuit
-- Servo output (PWM) used to control spindle speed (M3/M5 op codes)
+- Servo output used to control spindle speed (M3/M5 op codes), outputs 1 kHz PWM signal

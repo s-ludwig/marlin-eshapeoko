@@ -286,6 +286,8 @@ void Servo::detach()
   if(isTimerActive(timer) == false) {
     finISR(timer);
   }
+  // make sure the output is LOW after detach
+  digitalWrite( servos[this->servoIndex].Pin.nbr,LOW);
 }
 
 void Servo::write(int value)
