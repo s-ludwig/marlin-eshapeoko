@@ -91,7 +91,7 @@ typedef enum { _Nbr_16timers } timer16_Sequence_t ;
 
 #define Servo_VERSION           2      // software version of this library
 
-#define MIN_PULSE_WIDTH         5     // the shortest pulse sent to a servo
+#define MIN_PULSE_WIDTH        50     // the shortest pulse sent to a servo
 #define MAX_PULSE_WIDTH      1000     // the longest pulse sent to a servo
 #define DEFAULT_PULSE_WIDTH     5     // default pulse width when servo is attached
 #define REFRESH_INTERVAL     1000     // minumim time to refresh servos in microseconds
@@ -109,6 +109,7 @@ typedef struct  {
 typedef struct {
   ServoPin_t Pin;
   unsigned int ticks;
+  int pw; // usecs
 } servo_t;
 
 class Servo

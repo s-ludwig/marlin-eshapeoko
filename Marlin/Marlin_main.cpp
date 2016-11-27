@@ -1649,6 +1649,10 @@ void process_commands()
       if (code_seen('S')) {
         long rpm = code_value_long();
         servo_0_throttle = (rpm * 1000) / MAX_SPINDLE_RPM;
+        #if SPINDLE_SPEED_QUADRATIC
+        servo_0_throttle = ((long)servo_0_throttle * servo_0_throttle) / 1000;
+        #endif
+        servo_0_throttle = ((long)servo_0_throttle * (MAX_PULSE_WIDTH - MIN_PULSE_WIDTH)) / 1000 + MIN_PULSE_WIDTH;
       }
       if (!servos[0].attached()) servos[0].attach(SERVO0_PIN);
       servos[0].writeMicroseconds(servo_0_throttle);
