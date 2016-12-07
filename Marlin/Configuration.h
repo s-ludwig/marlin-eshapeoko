@@ -301,9 +301,9 @@ const bool Z_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic o
 #define max_software_endstops true  // If true, axis won't move to coordinates greater than the defined lengths below.
 
 // Travel limits after homing
-#define X_MAX_POS 320
+#define X_MAX_POS 330
 #define X_MIN_POS 0
-#define Y_MAX_POS 800
+#define Y_MAX_POS 835
 #define Y_MIN_POS 0
 #define Z_MAX_POS 61
 #define Z_MIN_POS 0
@@ -390,8 +390,8 @@ const bool Z_MAX_ENDSTOP_INVERTING = false; // set to true to invert the logic o
 
 // default settings
 
-#define DEFAULT_AXIS_STEPS_PER_UNIT   {87.489,87.489,1280.0,760*1.1}  // default steps per unit for ultimaker 
-#define DEFAULT_MAX_FEEDRATE          {200, 200, 7, 45}    // (mm/sec)    
+#define DEFAULT_AXIS_STEPS_PER_UNIT   {43.751117,40.043310,160.454621,760*1.1}  // default steps per unit for ultimaker 
+#define DEFAULT_MAX_FEEDRATE          {130, 130, 15, 45}    // (mm/sec)    
 #define DEFAULT_MAX_ACCELERATION      {9000,9000,100,10000}    // X, Y, Z, E maximum start speed for accelerated moves. E default values are good for skeinforge 40+, for older versions raise them a lot.
 
 #define DEFAULT_ACCELERATION          300    // X, Y, Z and E max acceleration in mm/s^2 for printing moves 
