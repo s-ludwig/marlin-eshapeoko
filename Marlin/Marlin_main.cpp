@@ -1021,7 +1021,7 @@ static void homeaxis(int axis) {
         // 1. Calibrate Y 
         // 1. a) drive forward 3*home_retract_mm
         destination[axis] = 3*home_retract_mm(axis) * axis_home_dir;
-        plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate/60, active_extruder);
+        plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate/180, active_extruder);
         WRITE(Y2_ENABLE_PIN, !Y_ENABLE_ON);
         st_synchronize();
         current_position[axis] = 0;
@@ -1035,7 +1035,7 @@ static void homeaxis(int axis) {
         // 2. Calibrate Y2
         // 2. a) drive forward 3*home_rectract_mm
         destination[axis] = 3*home_retract_mm(axis) * axis_home_dir;
-        plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate/60, active_extruder);
+        plan_buffer_line(destination[X_AXIS], destination[Y_AXIS], destination[Z_AXIS], destination[E_AXIS], feedrate/180, active_extruder);
         WRITE(Y_ENABLE_PIN, !Y_ENABLE_ON);
         st_synchronize();
         current_position[axis] = 0;
