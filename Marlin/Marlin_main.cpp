@@ -484,7 +484,7 @@ void setup()
   servo_init();
 
   lcd_init();
-  _delay_ms(1000);	// wait 1sec to display the splash screen
+  _delay_ms(200);	// wait 1sec to display the splash screen
 
   #if defined(CONTROLLERFAN_PIN) && CONTROLLERFAN_PIN > -1
     SET_OUTPUT(CONTROLLERFAN_PIN); //Set pin used for driver cooling fan
@@ -1646,6 +1646,7 @@ void process_commands()
 #endif
 #if SERVO_0_SPINDLE
     case 3: // start spindle clockwise
+      st_synchronize();
       if (code_seen('S')) {
         long rpm = code_value_long();
         servo_0_throttle = (rpm * 1000) / MAX_SPINDLE_RPM;
@@ -1656,8 +1657,10 @@ void process_commands()
       }
       if (!servos[0].attached()) servos[0].attach(SERVO0_PIN);
       servos[0].writeMicroseconds(servo_0_throttle);
+      _delay_ms(2000); // wait for motor to spin up/down
       break;
     case 5: // stop spindle
+      st_synchronize();
       servos[0].detach();
       break;
 #endif
