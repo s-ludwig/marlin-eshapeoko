@@ -301,6 +301,10 @@ bool target_direction;
 void get_arc_coordinates();
 bool setTargetedHotend(int code);
 
+#if SERVO_0_SPINDLE
+void handleSpindleSpeedChange();
+#endif
+
 void serial_echopair_P(const char *s_P, float v)
     { serialprintPGM(s_P); SERIAL_ECHO(v); }
 void serial_echopair_P(const char *s_P, double v)
@@ -1100,6 +1104,9 @@ void process_commands()
     case 0: // G0 -> G1
     case 1: // G1
       if(Stopped == false) {
+        #if SERVO_0_SPINDLE
+        handleSpindleSpeedChange();
+        #endif
         get_coordinates(); // For X Y Z E F
         prepare_move();
         //ClearToSend();
@@ -1647,16 +1654,7 @@ void process_commands()
 #if SERVO_0_SPINDLE
     case 3: // start spindle clockwise
       st_synchronize();
-      if (code_seen('S')) {
-        long rpm = code_value_long();
-        servo_0_throttle = (rpm * 1000) / MAX_SPINDLE_RPM;
-        #if SPINDLE_SPEED_QUADRATIC
-        servo_0_throttle = ((long)servo_0_throttle * servo_0_throttle) / 1000;
-        #endif
-        servo_0_throttle = ((long)servo_0_throttle * (MAX_PULSE_WIDTH - MIN_PULSE_WIDTH)) / 1000 + MIN_PULSE_WIDTH;
-      }
-      if (!servos[0].attached()) servos[0].attach(SERVO0_PIN);
-      servos[0].writeMicroseconds(servo_0_throttle);
+      handleSpindleSpeedChange();
       _delay_ms(2000); // wait for motor to spin up/down
       break;
     case 5: // stop spindle
@@ -3507,4 +3505,25 @@ bool setTargetedHotend(int code){
   }
   return false;
 }
+
+#if SERVO_0_SPINDLE
+void handleSpindleSpeedChange()
+{
+  long thr = servo_0_throttle;
+  if (code_seen('S')) {
+    long rpm = code_value_long();
+    long thr = (rpm * 1000) / MAX_SPINDLE_RPM;
+    #if SPINDLE_SPEED_QUADRATIC
+    thr = ((long)thr * thr) / 1000;
+    #endif
+    thr = ((long)thr * (MAX_PULSE_WIDTH - MIN_PULSE_WIDTH)) / 1000 + MIN_PULSE_WIDTH;
+  }
+  if (thr != servo_0_throttle) {
+    st_synchronize();
+    servo_0_throttle = thr;
+    if (!servos[0].attached()) servos[0].attach(SERVO0_PIN);
+    servos[0].writeMicroseconds(servo_0_throttle);
+  }
+}
+#endif
 
